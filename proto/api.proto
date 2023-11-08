@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package io.opennoty.api.proto;
+option java_package = "io.opennoty.api.peer";
+option java_outer_classname = "ApiProto";
+option go_package = "github.com/opennoty/opennoty/go/api_proto";
+
+enum PayloadType {
+  kPayloadUnknown = 0;
+  kPayloadRequest = 1;
+  kPayloadResponse = 2;
+  kPayloadTopicNotify = 3;
+}
+
+enum RequestMethod {
+  kRequestUnknown = 0;
+  kRequestTopicSubscribe = 1;
+  kRequestTopicUnsubscribe = 2;
+  kRequestStartNotification = 3;
+  kRequestFetchNotifications = 4;
+  kRequestMarkNotifications = 5;
+}
+
+message FetchNotificationsRequest {
+  string continue_token = 1;
+  int32 limits = 2;
+}
+
+message FetchNotificationsResponse {
+  string continue_token = 1;
+  repeated string item = 2;
+}
+
+message MarkNotificationsRequest {
+  repeated string mark_read_ids = 1;
+  repeated string unmark_read_ids = 2;
+  repeated string delete_ids = 3;
+}
+
+message Payload {
+  PayloadType   type = 1;
+  bytes         request_id = 2; // 16 byte binary (uuid)
+  RequestMethod request_method = 3;
+
+  bool          response_ok = 10;
+
+  // kPayloadTopicNotify: R
+  // kRequestTopicSubscribe: R
+  // kRequestTopicUnsubscribe: W
+  // kRequestStartNotification: R
+  string subscribe_key = 30;
+
+  // kPayloadTopicNotify
+  string topic_name = 31;
+  bytes  topic_data = 32;
+
+  // kRequestFetchNotifications: R/W
+  FetchNotificationsRequest fetch_notification_request = 41;
+  FetchNotificationsResponse fetch_notification_response = 42;
+
+  MarkNotificationsRequest mark_notifications_request = 51;
+}

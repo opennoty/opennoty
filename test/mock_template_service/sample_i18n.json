@@ -1,0 +1,8 @@
+{
+  "ko-kr": {
+    "workflow.user-activity.email.subject": "오늘, {{ .name }} 님의 활동: {{ .count }}"
+  },
+  "en-us": {
+    "workflow.user-activity.email.subject": "Today, {{ .name }}'s activities: {{ .count }}"
+  }
+}

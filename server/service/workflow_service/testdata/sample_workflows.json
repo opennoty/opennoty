@@ -1,0 +1,25 @@
+[
+  {
+    "name": "user-activity",
+    "revision": 1,
+    "flow": [
+      {
+        "type": "notification",
+        "subjectTemplate": "NOTI/{{ (first .Step.Events) }}"
+      },
+      {
+        "type": "digest",
+        "digest": {
+          "timing": "event",
+          "eventTime": 3
+        }
+      },
+      {
+        "type": "email",
+        "templateName": "user-activity-email",
+        "subjectTemplate": "TestMail: {{ i18n $ \"workflow.user-activity.email.subject\" (dict \"name\" $.Subscriber.FullName \"count\" $.Step.TotalCount ) }}",
+        "contentTemplate": "<div>Hello, {{ .Subscriber.FullName }}</div> {{- $root := . -}}{{ range .Step.Events }}{{ . }} {{- end -}}"
+      }
+    ]
+  }
+]
